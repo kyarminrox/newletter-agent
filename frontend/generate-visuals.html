@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Suggest Visuals</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      line-height: 1.5;
+    }
+    label {
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 6px 0 12px;
+      padding: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #007ACC;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+    #error {
+      color: red;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Creative Director: Suggest Visuals</h1>
+
+  <label for="excerptInput">Draft Excerpt (Markdown):</label>
+  <textarea id="excerptInput" rows="10" placeholder="Paste the first few paragraphs of your polished draft here..."></textarea>
+
+  <button id="suggestBtn">Suggest Visuals</button>
+
+  <div id="error"></div>
+
+  <h2>Visual Prompts Output:</h2>
+  <div id="output">(Waiting for request...)</div>
+
+  <script src="js/generate-visuals.js"></script>
+</body>
+</html>

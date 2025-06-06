@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generate Outlines</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      line-height: 1.5;
+    }
+    label {
+      font-weight: bold;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 6px 0 12px;
+      padding: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #007ACC;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 4px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+    #error {
+      color: red;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Outline Architect: Generate Outlines</h1>
+
+  <label for="researchInput">Research Brief (Markdown):</label>
+  <textarea id="researchInput" rows="10" placeholder="Paste the full Research Brief here..."></textarea>
+
+  <label for="issueInput">Issue Brief (plain text):</label>
+  <input type="text" id="issueInput" placeholder="e.g., Topic: Habit Loops; Audience: 10k; Tone: minimal" />
+
+  <button id="generateBtn">Generate Outlines</button>
+
+  <div id="error"></div>
+
+  <h2>Outlines Output:</h2>
+  <div id="output">(Waiting for request...)</div>
+
+  <script src="js/generate-outlines.js"></script>
+</body>
+</html>

@@ -125,3 +125,35 @@ print(md)
 4. In the *Metrics CSV Path* field, enter the relative path, e.g. `data/metrics/metrics_2025-06-01.csv`.
 5. In *Subject Lines*, enter each candidate subject line on its own line.
 6. Click **Forecast Performance**. The page displays a Markdown forecast. If too little history exists, a stub forecast explains the default assumptions.
+
+### Formatter (Package for Substack)
+
+1. **Ensure you have:**
+   - A final draft Markdown file (e.g., `data/final/FinalIssue_2025-06-15.md`).
+   - A cover image (PNG or JPG), e.g., `assets/cover_2025-06-15.png`.
+2. **Run the FastAPI server** if not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-package.html` (via `file://` URL).
+4. Fill in all fields: draft path, cover path, title, slug, comma-separated tags, and publish datetime (ISO 8601).
+5. Click **Package for Substack**. A download link appears for the generated ZIP, e.g., `package/2025-06-15.zip`.
+   Inside the ZIP:
+   - `2025-06-15/Issue.md` (with `![Cover](images/cover.png)` at the top)
+   - `2025-06-15/images/cover.png`
+   - `2025-06-15/metadata.json`
+
+
+### Performance Analysis (Lessons Learned)
+
+1. **Ensure you have:**
+   - A forecast Markdown report from `/api/forecast-performance`.
+   - A post-send metrics CSV with columns `IssueDate`, `OpenRate`, `ClickRate`.
+2. **Run the FastAPI server**:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open** `frontend/generate-analysis.html` in your browser.
+4. Paste the forecast Markdown and enter the CSV path.
+5. Click **Analyze Performance** to generate a Markdown summary under `## Lessons Learned`.

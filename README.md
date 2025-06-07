@@ -157,3 +157,7 @@ print(md)
 3. **Open** `frontend/generate-analysis.html` in your browser.
 4. Paste the forecast Markdown and enter the CSV path.
 5. Click **Analyze Performance** to generate a Markdown summary under `## Lessons Learned`.
+
+### Run Full Pipeline
+
+Open `frontend/run-pipeline.html` and fill all fields to run the entire pipeline via `/api/run-pipeline`. The output shows the path to the generated package ZIP.

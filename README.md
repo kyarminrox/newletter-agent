@@ -60,7 +60,7 @@ print(md)
    * *Metrics CSV Path*: relative path to your CSV, e.g. `data/metrics/metrics_2025-06-01.csv`
    * *Search Query*: your research query
 
-4. Click **Generate Research** to produce a Markdown brief. The output appears in the page.
+4. Click **Generate Research** to produce a Markdown brief. The output appears in the page:
 
 ```markdown
 ## Pain Points
@@ -186,7 +186,7 @@ print(md)
 3. **Open**:
    `frontend/generate-analysis.html` (via `file://` URL)
 4. Paste the forecast Markdown and enter the actuals CSV path.
-5. Click **Analyze Performance** to generate a Markdown summary under `## Lessons Learned`.
+5. Click **Analyze Performance** to generate a Markdown summary under `## Lessons Learned`:
 
 ```markdown
 ## Lessons Learned

@@ -191,7 +191,7 @@ async def package_for_substack(req: PackageRequest):
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
     except RuntimeError as re:
-        raise HTTPException(status_code=500, detail=str(re))
+        raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
     return PackageResponse(package_zip_path=zip_path)

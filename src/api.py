@@ -260,4 +260,3 @@ async def run_pipeline_api(req: PipelineRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Pipeline error: {e}")
     return PipelineResponse(package_zip_path=zip_path)
-

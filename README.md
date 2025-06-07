@@ -1,76 +1,92 @@
-# Newsletter Agent
-
-This repository contains a prototype for an AI-powered Substack newsletter pipeline. The first implemented component is the **Data Collector** agent, which ingests metrics CSV files and past Markdown issues.
-
-## Setup
-
-1. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-2. Set your `GROQ_API_KEY` in a `.env` file at the project root:
-
-```dotenv
-GROQ_API_KEY=your-api-key
-```
-
-3. Run tests:
-
-```bash
-pytest
-```
-
-### Insight Scout (Research Brief)
-
-After ingesting metrics, you can create a research brief that mixes pain-point analysis with a live search.
-
-```python
-from src.agents.insight_scout import InsightScout
-
-scout = InsightScout()
-md = scout.fetch_research_brief(
-    "./data/metrics/metrics_2025-06-01.csv",
-    "habit loops email marketing",
-)
-print(md)
-```
-
-### API & Frontend: Generate Research Brief
-
-1. **Run the FastAPI server**:
-   ```bash
-   uvicorn src.api:app --reload
-   ```
-   The server listens on `http://127.0.0.1:8000`.
-
-2. **Open the frontend page**:
-   Open `frontend/generate-research.html` in your browser (e.g., via `file://` URL).
-
-3. **Fill the form**:
-   - *Metrics CSV Path*: relative path to your CSV, e.g. `data/metrics/metrics_2025-06-01.csv`.
-   - *Search Query*: your research query.
-
-4. Click **Generate Research** to produce a Markdown brief. The output appears in the page.
-
-```example
-## Pain Points
-- **2025-05-15**: only 3.82 replies per 1k subscribers (ReplyCount=38, Subscribers=9950)
-
-## Trending Articles
-- How Habit Loops Drive Email Engagement (https://example.com/habit-loops-2025)
-- The Science of Habit Formation in Newsletters (https://news.example.org/habit-science)
-```
-
 ### Outline Architect (Generate Outlines)
 
-1. **Ensure you have a Research Brief** from Insight Scout and an Issue Brief.
-2. **Run the FastAPI server** if it's not already running:
+1. **Ensure you have a Research Brief** from Insight Scout and an Issue Brief.  
+2. **Run the FastAPI server** if it's not already running:  
    ```bash
    uvicorn src.api:app --reload
-   ```
-3. **Open the frontend page**:
-   `frontend/generate-outlines.html` (via `file://` URL).
-4. Paste the Research Brief Markdown into the first textarea and enter your Issue Brief text.
-5. Click **Generate Outlines**. The page will display three Markdown outlines, each beginning with `# Outline Option`.
+Open the frontend page:
+frontend/generate-outlines.html (via file:// URL).
+
+Paste the Research Brief Markdown into the first textarea and enter your Issue Brief text.
+
+Click Generate Outlines. The page will display three Markdown outlines, each beginning with # Outline Option.
+
+Draftsmith (Create Draft from Outline)
+Ensure you have a chosen Outline (Markdown) from Outline Architect.
+
+Run the FastAPI server if it's not already running:
+
+bash
+Copy
+Edit
+uvicorn src.api:app --reload
+Open the frontend page:
+frontend/generate-draft.html (via file:// URL).
+
+Paste one of the # Outline Option blocks into the textarea.
+
+Click Create Draft. The page displays a full Markdown draft beginning with <!-- COVER_IMAGE_HOOK -->.
+
+Editor-in-Chief (Polish Draft)
+Ensure you have a full draft (Markdown) from Draftsmith or uploaded.
+
+Run the FastAPI server if it's not already running:
+
+bash
+Copy
+Edit
+uvicorn src.api:app --reload
+Open the frontend page:
+frontend/generate-edit.html (via file:// URL).
+
+Paste the entire draft Markdown into the textarea.
+
+Click Edit Draft. The page shows the polished Markdown and a revision summary under the respective headings.
+
+Creative Director (Suggest Visuals)
+Ensure you have a polished draft excerpt from Editor-in-Chief.
+
+Run the FastAPI server if it's not already running:
+
+bash
+Copy
+Edit
+uvicorn src.api:app --reload
+Open the frontend page:
+frontend/generate-visuals.html (via file:// URL).
+
+Paste the first few paragraphs of your polished draft into the textarea.
+
+Click Suggest Visuals. The page shows three lines, each containing a description and a text-to-image prompt separated by a tab.
+
+Metrics Forecaster (Forecast Performance)
+Ensure you have a metrics CSV with at least 3 past issues (columns: IssueDate, SubjectLine, OpenRate).
+
+Run the FastAPI server if it's not already running:
+
+bash
+Copy
+Edit
+uvicorn src.api:app --reload
+Open the frontend page:
+frontend/generate-forecast.html (via file:// URL).
+
+In the Metrics CSV Path field, enter the relative path, e.g. data/metrics/metrics_2025-06-01.csv.
+
+In Subject Lines, enter each candidate subject line on its own line.
+
+Click Forecast Performance. The page displays a Markdown forecast. If too little history exists, a stub forecast explains the default assumptions.
+
+yaml
+Copy
+Edit
+
+---  
+**Next steps**:  
+1. Replace that conflicted block in `README.md` with the above.  
+2. Remove the `<<<<<<<`, `=======`, and `>>>>>>>` lines.  
+3. Save, then:
+
+```bash
+git add README.md
+git commit

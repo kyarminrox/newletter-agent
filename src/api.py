@@ -196,3 +196,32 @@ async def package_for_substack(req: PackageRequest):
 
     return PackageResponse(package_zip_path=zip_path)
 
+from src.agents.performance_analyst import PerformanceAnalyst
+
+
+class AnalyzeRequest(BaseModel):
+    forecast_markdown: str
+    actuals_csv_path: str
+
+
+class AnalyzeResponse(BaseModel):
+    analysis_markdown: str
+
+
+@app.post("/api/analyze-performance", response_model=AnalyzeResponse)
+async def analyze_performance(req: AnalyzeRequest):
+    """Compare forecast vs. actual metrics and return lessons learned."""
+    analyst = PerformanceAnalyst()
+    try:
+        md = analyst.analyze(req.forecast_markdown, req.actuals_csv_path)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except FileNotFoundError as fnf:
+        raise HTTPException(status_code=404, detail=str(fnf))
+    except RuntimeError as re:
+        raise HTTPException(status_code=502, detail=str(re))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
+    return AnalyzeResponse(analysis_markdown=md)
+

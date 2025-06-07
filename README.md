@@ -144,3 +144,16 @@ print(md)
    - `2025-06-15/images/cover.png`
    - `2025-06-15/metadata.json`
 
+
+### Performance Analysis (Lessons Learned)
+
+1. **Ensure you have:**
+   - A forecast Markdown report from `/api/forecast-performance`.
+   - A post-send metrics CSV with columns `IssueDate`, `OpenRate`, `ClickRate`.
+2. **Run the FastAPI server**:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open** `frontend/generate-analysis.html` in your browser.
+4. Paste the forecast Markdown and enter the CSV path.
+5. Click **Analyze Performance** to generate a Markdown summary under `## Lessons Learned`.

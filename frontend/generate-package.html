@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Package for Substack</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; line-height: 1.5; }
+    label { font-weight: bold; }
+    input[type="text"], input[type="file"], textarea { width: 100%; box-sizing: border-box; margin: 6px 0 12px; padding: 8px; font-size: 1rem; }
+    button { background-color: #007ACC; color: white; border: none; padding: 10px 16px; font-size: 1rem; cursor: pointer; border-radius: 4px; }
+    button:disabled { background-color: #999; cursor: not-allowed; }
+    #output { margin-top: 12px; }
+    #error { color: red; margin-top: 12px; }
+    a.download-link { display: inline-block; margin-top: 8px; color: #007ACC; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>Formatter: Package for Substack</h1>
+
+  <label for="draftPath">Final Draft Markdown Path:</label>
+  <input type="text" id="draftPath" placeholder="e.g., data/final/FinalIssue_2025-06-15.md" />
+
+  <label for="coverPath">Cover Image Path:</label>
+  <input type="text" id="coverPath" placeholder="e.g., assets/cover_2025-06-15.png" />
+
+  <label for="titleInput">Title:</label>
+  <input type="text" id="titleInput" placeholder="Newsletter title" />
+
+  <label for="slugInput">Slug:</label>
+  <input type="text" id="slugInput" placeholder="slug-for-article" />
+
+  <label for="tagsInput">Tags (comma-separated):</label>
+  <input type="text" id="tagsInput" placeholder="e.g., email, marketing, habit" />
+
+  <label for="publishDateInput">Publish Date/Time (ISO 8601):</label>
+  <input type="text" id="publishDateInput" placeholder="2025-07-01T09:00:00+03:00" />
+
+  <button id="packageBtn">Package for Substack</button>
+
+  <div id="error"></div>
+
+  <div id="output">
+    <h2>Package ZIP Path:</h2>
+    <div id="zipPath">(Waiting for request...)</div>
+  </div>
+
+  <script src="js/generate-package.js"></script>
+</body>
+</html>

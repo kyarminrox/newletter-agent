@@ -1,33 +1,19 @@
 import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List
-
 from src.agents.insight_scout import InsightScout
-from src.agents.outline_architect import OutlineArchitect
-from src.agents.draftsmith import Draftsmith
-from src.agents.editor_in_chief import EditorInChief
-from src.agents.creative_director import CreativeDirector
-from src.agents.metrics_forecaster import MetricsForecaster
-from src.agents.formatter import Formatter
-from src.agents.performance_analyst import PerformanceAnalyst
 
 app = FastAPI(title="Newsletter Agent API")
 
 
-# Health check
-@app.get("/api/health")
-async def health_check():
-    return {"status": "ok"}
-
-
-# 1. Insight Scout
 class ResearchRequest(BaseModel):
     csv_path: str
     query: str
 
+
 class ResearchResponse(BaseModel):
     research_brief: str
+
 
 @app.post("/api/generate-research", response_model=ResearchResponse)
 async def generate_research(req: ResearchRequest):
@@ -43,10 +29,16 @@ async def generate_research(req: ResearchRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return ResearchResponse(research_brief=brief)
 
 
-# 2. Outline Architect
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok"}
+
+from src.agents.outline_architect import OutlineArchitect
+
 class OutlineRequest(BaseModel):
     research_brief: str
     issue_brief: str
@@ -66,10 +58,11 @@ async def generate_outlines(req: OutlineRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return OutlineResponse(outlines_markdown=md)
 
+from src.agents.draftsmith import Draftsmith
 
-# 3. Draftsmith
 class DraftRequest(BaseModel):
     outline_markdown: str
 
@@ -88,10 +81,11 @@ async def create_draft(req: DraftRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return DraftResponse(draft_markdown=draft_md)
 
+from src.agents.editor_in_chief import EditorInChief
 
-# 4. Editor-in-Chief
 class EditRequest(BaseModel):
     draft_markdown: str
 
@@ -111,10 +105,11 @@ async def edit_draft(req: EditRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return EditResponse(polished_markdown=polished, revision_summary=summary)
 
+from src.agents.creative_director import CreativeDirector
 
-# 5. Creative Director
 class VisualRequest(BaseModel):
     draft_excerpt: str
 
@@ -133,10 +128,12 @@ async def suggest_visuals(req: VisualRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return VisualResponse(visual_prompts=prompts)
 
+from typing import List
+from src.agents.metrics_forecaster import MetricsForecaster
 
-# 6. Metrics Forecaster
 class ForecastRequest(BaseModel):
     csv_path: str
     subject_lines: List[str]
@@ -158,65 +155,5 @@ async def forecast_performance(req: ForecastRequest):
         raise HTTPException(status_code=502, detail=str(re))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
     return ForecastResponse(forecast_markdown=md)
-
-
-# 7. Formatter
-class PackageRequest(BaseModel):
-    draft_path: str
-    cover_image_path: str
-    title: str
-    slug: str
-    tags: List[str]
-    publish_date: str
-
-class PackageResponse(BaseModel):
-    package_zip_path: str
-
-@app.post("/api/package-for-substack", response_model=PackageResponse)
-async def package_for_substack(req: PackageRequest):
-    """Package the final draft, cover image, and metadata into a Substack-ready ZIP."""
-    fmt = Formatter()
-    try:
-        zip_path = fmt.package_for_substack(
-            draft_path=req.draft_path,
-            cover_image_path=req.cover_image_path,
-            title=req.title,
-            slug=req.slug,
-            tags=req.tags,
-            publish_date=req.publish_date,
-        )
-    except FileNotFoundError as fnf:
-        raise HTTPException(status_code=404, detail=str(fnf))
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-    except RuntimeError as re:
-        raise HTTPException(status_code=502, detail=str(re))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error: {e}")
-    return PackageResponse(package_zip_path=zip_path)
-
-
-# 8. Performance Analyst
-class AnalyzeRequest(BaseModel):
-    forecast_markdown: str
-    actuals_csv_path: str
-
-class AnalyzeResponse(BaseModel):
-    analysis_markdown: str
-
-@app.post("/api/analyze-performance", response_model=AnalyzeResponse)
-async def analyze_performance(req: AnalyzeRequest):
-    """Compare forecast vs. actuals and return a Lessons Learned report."""
-    analyst = PerformanceAnalyst()
-    try:
-        md = analyst.analyze(req.forecast_markdown, req.actuals_csv_path)
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-    except FileNotFoundError as fnf:
-        raise HTTPException(status_code=404, detail=str(fnf))
-    except RuntimeError as re:
-        raise HTTPException(status_code=502, detail=str(re))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal error: {e}")
-    return AnalyzeResponse(analysis_markdown=md)

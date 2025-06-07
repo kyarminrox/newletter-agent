@@ -6,26 +6,27 @@ This repository contains a prototype for an AI-powered Substack newsletter pipel
 
 1. Install dependencies:
 
-   ```bash
-   pip install -r requirements.txt
-Set your GROQ_API_KEY in a .env file at the project root:
+```bash
+pip install -r requirements.txt
+```
 
-dotenv
-Copy
-Edit
+2. Set your `GROQ_API_KEY` in a `.env` file at the project root:
+
+```dotenv
 GROQ_API_KEY=your-api-key
-Run tests:
+```
 
-bash
-Copy
-Edit
+3. Run tests:
+
+```bash
 pytest
-Insight Scout (Research Brief)
-After ingesting metrics, you can create a research brief that mixes pain-point analysis with a live search:
+```
 
-python
-Copy
-Edit
+### Insight Scout (Research Brief)
+
+After ingesting metrics, you can create a research brief that mixes pain-point analysis with a live search.
+
+```python
 from src.agents.insight_scout import InsightScout
 
 scout = InsightScout()
@@ -34,140 +35,93 @@ md = scout.fetch_research_brief(
     "habit loops email marketing",
 )
 print(md)
-API & Frontend: Generate Research Brief
-Run the FastAPI server:
+```
 
-bash
-Copy
-Edit
-uvicorn src.api:app --reload
-Open frontend/generate-research.html (via file:// URL).
+### API & Frontend: Generate Research Brief
 
-Fill the form:
+1. **Run the FastAPI server**:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+   The server listens on `http://127.0.0.1:8000`.
 
-Metrics CSV Path: e.g. data/metrics/metrics_2025-06-01.csv
+2. **Open the frontend page**:
+   Open `frontend/generate-research.html` in your browser (e.g., via `file://` URL).
 
-Search Query: your research query
+3. **Fill the form**:
+   - *Metrics CSV Path*: relative path to your CSV, e.g. `data/metrics/metrics_2025-06-01.csv`.
+   - *Search Query*: your research query.
 
-Click Generate Research.
+4. Click **Generate Research** to produce a Markdown brief. The output appears in the page.
 
-markdown
-Copy
-Edit
+```example
 ## Pain Points
 - **2025-05-15**: only 3.82 replies per 1k subscribers (ReplyCount=38, Subscribers=9950)
 
 ## Trending Articles
 - How Habit Loops Drive Email Engagement (https://example.com/habit-loops-2025)
 - The Science of Habit Formation in Newsletters (https://news.example.org/habit-science)
-Outline Architect (Generate Outlines)
-Ensure you have a Research Brief and an Issue Brief.
+```
 
-Run uvicorn src.api:app --reload.
+### Outline Architect (Generate Outlines)
 
-Open frontend/generate-outlines.html.
+1. **Ensure you have a Research Brief** from Insight Scout and an Issue Brief.
+2. **Run the FastAPI server** if it's not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-outlines.html` (via `file://` URL).
+4. Paste the Research Brief Markdown into the first textarea and enter your Issue Brief text.
+5. Click **Generate Outlines**. The page will display three Markdown outlines, each beginning with `# Outline Option`.
 
-Paste the Research Brief into the first textarea and enter your Issue Brief.
+### Draftsmith (Create Draft from Outline)
 
-Click Generate Outlines.
+1. **Ensure you have a chosen Outline** (Markdown) from Outline Architect.
+2. **Run the FastAPI server** if it's not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-draft.html` (via `file://` URL).
+4. Paste one of the `# Outline Option` blocks into the textarea.
+5. Click **Create Draft**.
+   The page displays a full Markdown draft beginning with `<!-- COVER_IMAGE_HOOK -->`.
 
-Draftsmith (Create Draft from Outline)
-Choose an Outline from the previous step.
+### Editor-in-Chief (Polish Draft)
 
-Run uvicorn src.api:app --reload.
+1. **Ensure you have a full draft** (Markdown) from Draftsmith or uploaded.
+2. **Run the FastAPI server** if it's not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-edit.html` (via `file://` URL).
+4. Paste the entire draft Markdown into the textarea.
+5. Click **Edit Draft**.
+   The page shows the polished Markdown and a revision summary under the respective headings.
 
-Open frontend/generate-draft.html.
+### Creative Director (Suggest Visuals)
 
-Paste the outline (one # Outline Option … block) into the textarea.
+1. **Ensure you have a polished draft excerpt** from Editor-in-Chief.
+2. **Run the FastAPI server** if it's not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-visuals.html` (via `file://` URL).
+4. Paste the first few paragraphs of your polished draft into the textarea.
+5. Click **Suggest Visuals**. The page shows three lines, each containing a description and a text-to-image prompt separated by a tab.
 
-Click Create Draft.
+### Metrics Forecaster (Forecast Performance)
 
-Editor-in-Chief (Polish Draft)
-Take the full draft from Draftsmith.
-
-Run uvicorn src.api:app --reload.
-
-Open frontend/generate-edit.html.
-
-Paste the draft into the textarea.
-
-Click Edit Draft.
-
-Creative Director (Suggest Visuals)
-Use a polished excerpt from Editor-in-Chief.
-
-Run uvicorn src.api:app --reload.
-
-Open frontend/generate-visuals.html.
-
-Paste the excerpt into the textarea.
-
-Click Suggest Visuals.
-
-Metrics Forecaster (Forecast Performance)
-Have a metrics CSV (≥3 issues with IssueDate, SubjectLine, OpenRate).
-
-Run uvicorn src.api:app --reload.
-
-Open frontend/generate-forecast.html.
-
-Enter the CSV path and subject lines (one per line).
-
-Click Forecast Performance.
-
-Formatter (Package for Substack)
-Prepare:
-
-Final draft Markdown (e.g. data/final/FinalIssue_2025-06-15.md)
-
-Cover image (e.g. assets/cover_2025-06-15.png)
-
-Run uvicorn src.api:app --reload.
-
-Open frontend/generate-package.html.
-
-Fill in all fields (paths, title, slug, tags, publish date).
-
-Click Package for Substack.
-
-Download the ZIP (e.g. package/2025-06-15.zip) which contains:
-
-2025-06-15/Issue.md
-
-2025-06-15/images/cover.png
-
-2025-06-15/metadata.json
-
-Performance Analysis (Lessons Learned)
-Have:
-
-Forecast Markdown (from /api/forecast-performance)
-
-Post-send metrics CSV (IssueDate, OpenRate, ClickRate)
-
-Run uvicorn src.api:app --reload.
-
-Open frontend/generate-analysis.html.
-
-Paste the forecast and enter the CSV path.
-
-Click Analyze Performance.
-
-Example output:
-
-markdown
-Copy
-Edit
-## Lessons Learned
-- Forecast open rates were within 1% of actuals, showing strong model accuracy.
-- Click-throughs underperformed; consider testing stronger CTAs.
-- Segment by engagement score for better targeting in future sends.
-arduino
-Copy
-Edit
-
-After pasting this, remove the conflict markers and run:
-
-```bash
-git add README.md
-git commit
+1. **Ensure you have a metrics CSV** with at least 3 past issues (columns: `IssueDate`, `SubjectLine`, `OpenRate`).
+2. **Run the FastAPI server** if it's not already running:
+   ```bash
+   uvicorn src.api:app --reload
+   ```
+3. **Open the frontend page**:
+   `frontend/generate-forecast.html` (via `file://` URL).
+4. In the *Metrics CSV Path* field, enter the relative path, e.g. `data/metrics/metrics_2025-06-01.csv`.
+5. In *Subject Lines*, enter each candidate subject line on its own line.
+6. Click **Forecast Performance**. The page displays a Markdown forecast. If too little history exists, a stub forecast explains the default assumptions.

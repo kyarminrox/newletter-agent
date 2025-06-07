@@ -157,3 +157,42 @@ async def forecast_performance(req: ForecastRequest):
         raise HTTPException(status_code=500, detail=f"Internal error: {e}")
 
     return ForecastResponse(forecast_markdown=md)
+
+from typing import List
+from src.agents.formatter import Formatter
+
+class PackageRequest(BaseModel):
+    draft_path: str
+    cover_image_path: str
+    title: str
+    slug: str
+    tags: List[str]
+    publish_date: str
+
+class PackageResponse(BaseModel):
+    package_zip_path: str
+
+@app.post("/api/package-for-substack", response_model=PackageResponse)
+async def package_for_substack(req: PackageRequest):
+    """Package final draft and assets into a Substack-ready ZIP."""
+    fmt = Formatter()
+    try:
+        zip_path = fmt.package_for_substack(
+            draft_path=req.draft_path,
+            cover_image_path=req.cover_image_path,
+            title=req.title,
+            slug=req.slug,
+            tags=req.tags,
+            publish_date=req.publish_date,
+        )
+    except FileNotFoundError as fnf:
+        raise HTTPException(status_code=404, detail=str(fnf))
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except RuntimeError as re:
+        raise HTTPException(status_code=500, detail=str(re))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
+    return PackageResponse(package_zip_path=zip_path)
+
